@@ -1,0 +1,63 @@
+require('dotenv').config();
+
+// Ensure Gemini key is present before starting (Fail-fast requirement)
+if (!process.env.GEMINI_API_KEY && process.env.NODE_ENV !== 'test') {
+  console.error("CRITICAL ERROR: GEMINI_API_KEY environment variable is missing.");
+  process.exit(1);
+}
+
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const path = require('path');
+const footprintRoutes = require('./routes/footprint.routes');
+
+const app = express();
+
+// Security middlewares
+app.use(helmet());
+
+// Restrict CORS (in a real app, specify exact origins, here we allow dev origins and self)
+const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173', process.env.FRONTEND_URL];
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin) || origin.startsWith('http://localhost')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
+
+// Body parser with size limit to prevent large payload attacks
+app.use(express.json({ limit: '10kb' }));
+
+// API Routes
+app.use('/api/footprint', footprintRoutes);
+
+// Global error handler so stack traces don't leak to client
+app.use((err, req, res, next) => {
+  console.error("Unhandled error:", err.message);
+  res.status(500).json({ success: false, error: "Internal Server Error" });
+});
+
+// Serve static frontend assets if in production
+if (process.env.NODE_ENV === 'production') {
+  const staticPath = path.join(__dirname, '../frontend/dist');
+  app.use(express.static(staticPath));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(staticPath, 'index.html'));
+  });
+}
+
+const PORT = process.env.PORT || 3000;
+
+// Export app for testing, or listen if ran directly
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
