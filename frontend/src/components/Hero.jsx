@@ -14,6 +14,12 @@ function Hero() {
     return () => window.removeEventListener('scroll', updateHeroOpacity);
   }, []);
 
+  const handleCtaClick = (e) => {
+    const btn = e.currentTarget;
+    btn.classList.add('flash-white');
+    setTimeout(() => btn.classList.remove('flash-white'), 150);
+  };
+
   return (
     <section id="hero" ref={heroRef}>
       <div className="gradient-overlay"></div>
@@ -30,7 +36,7 @@ function Hero() {
           Input your home resource consumption metrics and let customized Gemini prompt models instantly structure actionable reduction models.
         </p>
         <div className="ctas">
-          <a href="#workspace-section" className="cta-btn">Launch Workspace &rarr;</a>
+          <a href="#workspace-section" className="cta-btn" onClick={handleCtaClick}>Launch Workspace &rarr;</a>
         </div>
       </div>
       <div className="bounce-arrow">

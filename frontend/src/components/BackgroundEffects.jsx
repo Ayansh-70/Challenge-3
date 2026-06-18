@@ -136,6 +136,7 @@ function BackgroundEffects() {
     const pCtx = pCanvas.getContext('2d');
     let particles = [];
     let particleAnimId;
+    let particlesActive = true;
 
     function resizeParticles() {
       pCanvas.width = window.innerWidth;
@@ -159,6 +160,10 @@ function BackgroundEffects() {
     }
 
     function animateParticles() {
+      if (!particlesActive) {
+        particleAnimId = requestAnimationFrame(animateParticles);
+        return;
+      }
       pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
       for (const p of particles) {
         p.x += p.vx; p.y += p.vy;
@@ -178,12 +183,23 @@ function BackgroundEffects() {
     window.addEventListener('resize', resizeParticles);
     animateParticles();
 
+    // Intersection Observer to pause particles when hero is out of view
+    const pObserver = new IntersectionObserver(([entry]) => {
+      particlesActive = entry.isIntersecting;
+      pCanvas.style.opacity = entry.isIntersecting ? '1' : '0';
+      pCanvas.style.transition = 'opacity 0.5s ease';
+    }, { threshold: 0 });
+    
+    const heroEl = document.getElementById('hero');
+    if (heroEl) pObserver.observe(heroEl);
+
     // Cleanup logic
     return () => {
       window.removeEventListener('resize', resizeCanvas);
       window.removeEventListener('resize', resizeParticles);
       cancelAnimationFrame(animationFrameId);
       cancelAnimationFrame(particleAnimId);
+      if (heroEl) pObserver.disconnect();
 
       if (videoEl) {
         videoEl.removeEventListener('seeked', handleSeeked);
@@ -208,7 +224,7 @@ function BackgroundEffects() {
         ></video>
         <div className="overlay"></div>
       </div>
-      <canvas id="particles-canvas" ref={particlesCanvasRef}></canvas>
+      <canvas id="particles-canvas" ref={particlesCanvasRef} style={{ pointerEvents: 'none', position: 'fixed', top: 0, left: 0, zIndex: 0 }}></canvas>
     </>
   );
 }

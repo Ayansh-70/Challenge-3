@@ -24,8 +24,27 @@ function FooterReveal() {
   return (
     <section id="section-three">
       <div className="inner" id="section-three-inner" ref={innerRef}>
-        <p>Optimized For Tomorrow</p>
-        <h2>HouseholdCarbon</h2>
+        <p style={{ marginBottom: '2rem' }}>HOW IT WORKS</p>
+        <div className="how-it-works-grid">
+          <div className="how-it-works-col">
+            <div className="how-it-works-col-top"></div>
+            <div className="num">01</div>
+            <h3>Enter Your Usage</h3>
+            <p>Add your monthly electricity, gas, water, and household size.</p>
+          </div>
+          <div className="how-it-works-col">
+            <div className="how-it-works-col-top"></div>
+            <div className="num">02</div>
+            <h3>Calculate Your Footprint</h3>
+            <p>Instantly see your CO₂e output and how it compares to global benchmarks.</p>
+          </div>
+          <div className="how-it-works-col">
+            <div className="how-it-works-col-top"></div>
+            <div className="num">03</div>
+            <h3>Get Your AI Reduction Plan</h3>
+            <p>Gemini AI analyzes your data and gives you a custom, step-by-step plan to cut emissions.</p>
+          </div>
+        </div>
       </div>
     </section>
   );

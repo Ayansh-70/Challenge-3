@@ -239,3 +239,277 @@ select.form-control option { background: #111; color: #fff; }
   .col-span-2 { grid-column: span 1; }
   #workspace-section { padding: 4rem 1rem; }
 }
+
+/* SECTION 2: Form Validation & Field Labels */
+.form-control.input-error {
+  border: 1px solid #e85d4a;
+  background: rgba(232, 93, 74, 0.05);
+}
+.inline-error-text {
+  color: #e85d4a;
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+/* Hide Browser Native Spinners */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Ensure focus states exist for all inputs */
+.form-control:focus, select.form-control:focus {
+  outline: none; 
+  border-color: var(--accent-emerald); 
+  background: rgba(16, 185, 129, 0.02);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+/* SECTION 3: Custom Spinner */
+.custom-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(16, 185, 129, 0.2);
+  border-top-color: var(--accent-emerald);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+}
+.spinner-text {
+  color: var(--accent-emerald);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  animation: pulse-text 1.5s infinite;
+}
+@keyframes pulse-text {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.fade-in {
+  animation: fadeIn 0.4s ease-in forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* SECTION 4: Benchmark Bar */
+.benchmark-container {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.benchmark-bar-wrapper {
+  position: relative;
+  height: 12px;
+  background: #1a1a1a;
+  border-radius: 6px;
+  margin: 2.5rem 0 1.5rem;
+  overflow: visible;
+}
+.benchmark-zone {
+  position: absolute;
+  top: 0;
+  height: 100%;
+}
+.benchmark-zone.green { left: 0; width: 40%; background: linear-gradient(90deg, #10B981, rgba(16,185,129,0.2)); border-radius: 6px 0 0 6px; }
+.benchmark-zone.yellow { left: 40%; width: 30%; background: linear-gradient(90deg, rgba(245,166,35,0.2), rgba(245,166,35,0.1)); }
+.benchmark-zone.red { left: 70%; width: 30%; background: linear-gradient(90deg, rgba(232,93,74,0.1), rgba(232,93,74,0.05)); border-radius: 0 6px 6px 0; }
+.benchmark-marker {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  background: var(--accent-cyan);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 12px var(--accent-cyan);
+  transition: left 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 5;
+}
+.benchmark-marker-label {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: #fff;
+  white-space: nowrap;
+  font-weight: 600;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+.benchmark-marker-label::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 4px 4px 0;
+  border-style: solid;
+  border-color: rgba(6, 182, 212, 0.3) transparent transparent transparent;
+}
+.benchmark-ref {
+  position: absolute;
+  top: 100%;
+  transform: translateX(-50%);
+  padding-top: 8px;
+  font-size: 0.65rem;
+  color: #888;
+  text-align: center;
+  white-space: nowrap;
+}
+.benchmark-ref::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 6px;
+  background: #444;
+}
+
+/* SECTION 5: Persistence Banner */
+.welcome-banner {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+}
+.welcome-banner button {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 1.25rem;
+}
+
+/* SECTION 6: Hero CTA Flash */
+.flash-white {
+  background: #fff !important;
+  color: #000 !important;
+  transition: all 0.15s ease !important;
+}
+
+/* SECTION 6: How It Works Columns */
+.how-it-works-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  width: 100%;
+}
+.how-it-works-col {
+  text-align: left;
+}
+.how-it-works-col-top {
+  width: 40px;
+  height: 1px;
+  background: var(--accent-emerald);
+  margin-bottom: 1.5rem;
+}
+.how-it-works-col .num {
+  color: var(--accent-emerald);
+  font-size: 0.813rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+}
+.how-it-works-col h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.75rem;
+}
+.how-it-works-col p {
+  color: #888;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+@media (max-width: 768px) {
+  .how-it-works-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* SECTION 7: Context Strip */
+.context-strip {
+  position: absolute;
+  top: 100%;
+  left: 2.5rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #555;
+  padding: 0.5rem 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.context-strip.visible {
+  opacity: 1;
+}
+
+/* SECTION 8: AI Action Cards */
+.ai-action-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 3px solid #fff;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.ai-action-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.ai-action-title {
+  font-weight: 700;
+  color: #fff;
+  font-size: 0.938rem;
+}
+.ai-action-badge {
+  color: var(--accent-cyan);
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: rgba(6, 182, 212, 0.1);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.ai-action-detail {
+  color: #aaa;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
