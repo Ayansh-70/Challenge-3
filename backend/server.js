@@ -15,7 +15,21 @@ const footprintRoutes = require('./routes/footprint.routes');
 const app = express();
 
 // Security middlewares
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        connectSrc: ["'self'", "https://d8j0ntlcm91z4.cloudfront.net"],
+        mediaSrc: ["'self'", "https://d8j0ntlcm91z4.cloudfront.net"],
+        imgSrc: ["'self'", "data:", "blob:"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"]
+      },
+    },
+  })
+);
 
 // Restrict CORS (in a real app, specify exact origins, here we allow dev origins and self)
 const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173', process.env.FRONTEND_URL].filter(Boolean);
