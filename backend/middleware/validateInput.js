@@ -1,4 +1,5 @@
 const { z } = require('zod');
+const { formatZodError } = require('../utils/formatZodError');
 
 // Schema matches exact requirements:
 // - electricity (kWh): >= 0
@@ -25,14 +26,7 @@ const validateInput = (req, res, next) => {
     next();
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({
-        success: false,
-        error: "Validation failed",
-        details: error.issues.map(err => ({
-          field: err.path.join('.'),
-          message: err.message
-        }))
-      });
+      return formatZodError(res, error);
     }
     return res.status(400).json({ success: false, error: "Invalid payload format" });
   }

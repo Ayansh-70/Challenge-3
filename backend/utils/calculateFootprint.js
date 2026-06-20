@@ -19,24 +19,26 @@ const FACTORS = {
   water: 0.003,
 };
 
+const roundToTwo = (num) => Math.round(num * 100) / 100;
+
 function calculateFootprint(data) {
   const { electricity, naturalGas, water, householdSize, heatingFuel } = data;
 
   // Calculate base emissions and round to 2 decimal places
-  const electricityCO2e = Math.round((electricity * FACTORS.electricity) * 100) / 100;
-  const naturalGasCO2e = Math.round((naturalGas * FACTORS.naturalGas) * 100) / 100;
-  const waterCO2e = Math.round((water * FACTORS.water) * 100) / 100;
+  const electricityCO2e = roundToTwo(electricity * FACTORS.electricity);
+  const naturalGasCO2e = roundToTwo(naturalGas * FACTORS.naturalGas);
+  const waterCO2e = roundToTwo(water * FACTORS.water);
 
   let heatingAdjustment = 0;
   if (heatingFuel === 'oil') {
     // 25% additional emissions penalty. Scope: applied only to electricity and natural gas (not water)
     // because water usage emissions are generally decoupled from the household's primary space-heating inefficiency.
-    heatingAdjustment = Math.round(((electricityCO2e + naturalGasCO2e) * 0.25) * 100) / 100;
+    heatingAdjustment = roundToTwo((electricityCO2e + naturalGasCO2e) * 0.25);
   }
 
   // Exact total that sums the components
-  const totalCO2e = Math.round((electricityCO2e + naturalGasCO2e + waterCO2e + heatingAdjustment) * 100) / 100;
-  const perCapitaCO2e = householdSize > 0 ? Math.round((totalCO2e / householdSize) * 100) / 100 : 0;
+  const totalCO2e = roundToTwo(electricityCO2e + naturalGasCO2e + waterCO2e + heatingAdjustment);
+  const perCapitaCO2e = householdSize > 0 ? roundToTwo(totalCO2e / householdSize) : 0;
 
   return {
     totalCO2e,

@@ -1,6 +1,7 @@
 const express = require('express');
 const { getGoalCoaching } = require('../services/gemini.service');
 const { z } = require('zod');
+const { formatZodError } = require('../utils/formatZodError');
 
 const router = express.Router();
 
@@ -25,11 +26,7 @@ router.post('/goal-coaching', async (req, res) => {
     console.error("Error in POST /goal-coaching:", error);
     
     if (error instanceof z.ZodError) {
-      return res.status(400).json({
-        success: false,
-        error: "Validation failed",
-        details: error.issues
-      });
+      return formatZodError(res, error);
     }
 
     // Fallback message per requirements if something unexpected breaks

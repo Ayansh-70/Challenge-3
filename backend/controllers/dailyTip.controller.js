@@ -1,5 +1,3 @@
-const express = require('express');
-const router = express.Router();
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 let cachedTip = null;
@@ -13,12 +11,24 @@ const FALLBACK_TIPS = [
   "Unplug phantom energy drainers like chargers and TVs when not in use."
 ];
 
-router.get('/daily-tip', async (req, res) => {
+function getCachedTip(todayDate) {
+  if (cachedTipDate === todayDate && cachedTip) {
+    return cachedTip;
+  }
+  return null;
+}
+
+function getFallbackTip(dayOfMonth) {
+  return FALLBACK_TIPS[dayOfMonth % FALLBACK_TIPS.length];
+}
+
+async function getDailyTip(req, res) {
   try {
     const today = new Date().toISOString().split('T')[0];
     
-    if (cachedTipDate === today && cachedTip) {
-      return res.status(200).json({ success: true, tip: cachedTip });
+    const cached = getCachedTip(today);
+    if (cached) {
+      return res.status(200).json({ success: true, tip: cached });
     }
 
     if (process.env.GEMINI_API_KEY) {
@@ -44,9 +54,9 @@ router.get('/daily-tip', async (req, res) => {
   } catch (error) {
     console.error("Daily tip generation failed:", error.message || error);
     const dayOfMonth = new Date().getDate();
-    const fallbackTip = FALLBACK_TIPS[dayOfMonth % FALLBACK_TIPS.length];
+    const fallbackTip = getFallbackTip(dayOfMonth);
     return res.status(200).json({ success: true, tip: fallbackTip, source: 'fallback' });
   }
-});
+}
 
-module.exports = router;
+module.exports = { getDailyTip, getCachedTip, getFallbackTip };

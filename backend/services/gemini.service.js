@@ -73,32 +73,32 @@ async function getPersonalizedInsights(footprintData) {
 
   // Provide sensible fallbacks for potentially missing data
   const safeBreakdown = breakdown || {};
-  const e_raw = safeBreakdown.electricity ?? 0;
-  const g_raw = safeBreakdown.naturalGas ?? 0;
-  const w_raw = safeBreakdown.water ?? 0;
-  const h_size = householdSize ?? 1;
+  const electricityRaw = safeBreakdown.electricity ?? 0;
+  const gasRaw = safeBreakdown.naturalGas ?? 0;
+  const waterRaw = safeBreakdown.water ?? 0;
+  const householdSizeVal = householdSize ?? 1;
   
-  const e_co2 = electricityCo2 ?? 0;
-  const g_co2 = gasCo2 ?? 0;
-  const w_co2 = waterCo2 ?? 0;
-  const t_co2 = total ?? 0;
-  const p_co2 = perCapita ?? 0;
-  const f_type = fuelType || 'unknown';
+  const electricityCo2Safe = electricityCo2 ?? 0;
+  const gasCo2Safe = gasCo2 ?? 0;
+  const waterCo2Safe = waterCo2 ?? 0;
+  const totalCo2Safe = total ?? 0;
+  const perCapitaCo2Safe = perCapita ?? 0;
+  const fuelTypeStr = fuelType || 'unknown';
 
   let dominantCategory = 'electricity';
-  let maxAmount = e_co2;
-  if (g_co2 > maxAmount) { maxAmount = g_co2; dominantCategory = 'naturalGas'; }
-  if (w_co2 > maxAmount) { maxAmount = w_co2; dominantCategory = 'water'; }
+  let maxAmount = electricityCo2Safe;
+  if (gasCo2Safe > maxAmount) { maxAmount = gasCo2Safe; dominantCategory = 'naturalGas'; }
+  if (waterCo2Safe > maxAmount) { maxAmount = waterCo2Safe; dominantCategory = 'water'; }
 
   const systemPrompt = `You are an environmental data analyst specializing in residential carbon reduction. You receive structured household consumption data and return a prioritized action plan. Always respond in valid JSON only. No preamble, no markdown, no explanation outside the JSON structure.`;
 
   const userPrompt = `Household data:
-- Monthly electricity: ${e_raw} kWh (CO₂e: ${e_co2} kg)
-- Monthly heating fuel: ${g_raw} therms of ${f_type} (CO₂e: ${g_co2} kg)
-- Monthly water: ${w_raw} liters (CO₂e: ${w_co2} kg)
-- Household size: ${h_size} people
-- Total monthly footprint: ${t_co2} kg CO₂e
-- Per-capita footprint: ${p_co2} kg CO₂e/person
+- Monthly electricity: ${electricityRaw} kWh (CO₂e: ${electricityCo2Safe} kg)
+- Monthly heating fuel: ${gasRaw} therms of ${fuelTypeStr} (CO₂e: ${gasCo2Safe} kg)
+- Monthly water: ${waterRaw} liters (CO₂e: ${waterCo2Safe} kg)
+- Household size: ${householdSizeVal} people
+- Total monthly footprint: ${totalCo2Safe} kg CO₂e
+- Per-capita footprint: ${perCapitaCo2Safe} kg CO₂e/person
 - Global average for reference: 375 kg CO₂e/month
 
 Return a JSON object with this exact shape:
